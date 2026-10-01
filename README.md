@@ -20,6 +20,7 @@ Client-side academic analytics app built with HTML, CSS and JavaScript.
 open "index.html"
 
 **Desktop Version**
+
 Unzip the file and **Run "build-windows.bat"** file and wait for to install dependencies ,after install **locate dist folder** and **run "Student-Academic-Performance-Analyzer-1.1.0-x64.exe"** to install app and run
 
 <img width="1759" height="1038" alt="image" src="https://github.com/user-attachments/assets/7f9ca8b1-4197-4bbc-b93e-99107cef9129" />
