@@ -81,3 +81,7 @@ Set and modify the maximum marks for Internal, Assignment, Unit Test, and Final 
 ## Desktop Edition
 
 The project includes an Electron desktop wrapper. It loads the app directly from local files, requires no HTTP/local server, and can generate PDFs locally.
+
+## 📄 Project Report
+
+[View / Download Project Report](docs/Student-Academic-Performance-Analyzer-Project-Report.pdf)
