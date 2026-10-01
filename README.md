@@ -16,10 +16,11 @@ Client-side academic analytics app built with HTML, CSS and JavaScript.
 - Responsive UI suitable for GitHub Pages
 
 ## How to Run the App?
-**To run Locally**
+**To run Locally:**
+
 open "index.html"
 
-**Desktop Version**
+**Desktop Version:**
 
 Unzip the file and **Run "build-windows.bat"** file and wait for to install dependencies ,after install **locate dist folder** and **run "Student-Academic-Performance-Analyzer-1.1.0-x64.exe"** to install app and run
 
