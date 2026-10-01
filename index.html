@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Student Academic Performance Analyzer - analyze marks, attendance, trends and recommendations." />
+  <title>Student Academic Performance Analyzer</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="logo">SA</div><div><h1>Student Academic Performance Analyzer</h1><p>Academic insights • performance tracking • personalized recommendations</p></div></div>
+    <div class="header-actions">
+      <button class="ghost" id="loadDemo">Load Demo</button>
+      <button class="secondary" id="printPdf">Print / PDF</button><button class="primary" id="exportData">Export JSON</button>
+      <button class="menu-button" id="menuButton" aria-label="Open app menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <div id="settingsBackdrop" class="settings-backdrop hidden"></div>
+  <aside id="settingsPanel" class="settings-panel" aria-hidden="true">
+    <div class="settings-head">
+      <div><span class="eyebrow">APP SETTINGS</span><h2>Assessment Settings</h2><p>Change the maximum marks used throughout the analyzer.</p></div>
+      <button class="close-settings" id="closeSettings" aria-label="Close settings">×</button>
+    </div>
+    <div class="settings-body">
+      <div class="settings-note"><b>Important:</b> these values control the subject input limits, displayed labels and performance calculations. Existing entered marks are kept.</div>
+      <div class="settings-grid">
+        <label>Internal maximum<input id="settingInternal" type="number" min="1" step="0.1" /></label>
+        <label>Assignment maximum<input id="settingAssignment" type="number" min="1" step="0.1" /></label>
+        <label>Unit Test maximum<input id="settingUnitTest" type="number" min="1" step="0.1" /></label>
+        <label>Final Exam maximum<input id="settingExam" type="number" min="1" step="0.1" /></label>
+      </div>
+      <div class="settings-actions">
+        <button class="secondary" id="resetSettings">Reset defaults</button>
+        <button class="primary" id="saveSettings">Save settings</button>
+      </div>
+      <div class="settings-result"><b>Batch Management</b><p>Add batches that can be selected for new student records and reports.</p><div class="batch-add-row"><input id="newBatch" placeholder="e.g. 2026-30" /><button type="button" class="secondary" id="addBatch">+ Add batch</button></div><div id="batchList" class="batch-list"></div></div>
+      <div class="settings-result"><b>Department Management</b><p>Add departments that can be selected for new student records, analytics and reports.</p><div class="batch-add-row"><input id="newDepartment" placeholder="e.g. Robotics Engineering" /><button type="button" class="secondary" id="addDepartment">+ Add department</button></div><div id="departmentList" class="batch-list"></div></div>
+      <div class="settings-result"><b>Appearance</b><p>Choose the interface background and accent colour.</p><label class="theme-setting">UI theme<select id="themeSetting"><option value="white-blue">White • Blue</option><option value="white-red">White • Red</option><option value="white-black">White • Black</option><option value="white-green">White • Green</option><option value="white-purple">White • Purple</option><option value="black-white">Black • White</option><option value="black-green">Black • Green</option><option value="black-red">Black • Red</option><option value="black-blue">Black • Blue</option></select></label></div>
+      <div class="settings-result"><b>Current calculation</b><p>Each subject is normalized to 100% using the four assessment components. Overall performance combines subject average and attendance.</p></div>
+    </div>
+  </aside>
+
+  <main class="container">
+    <section class="hero card">
+      <div><span class="eyebrow">ACADEMIC INTELLIGENCE</span><h2>Understand performance before problems become results.</h2><p>Enter student academic data to calculate performance, compare subjects, monitor attendance and generate actionable recommendations.</p></div>
+      <div class="hero-stat"><span id="studentCount">0</span><small>Students analyzed</small></div>
+    </section>
+
+    <section class="grid two">
+      <div class="card">
+        <div class="section-head"><div><h3>Add / Update Student</h3><p>All fields marked * are required.</p></div><span class="pill">Input</span></div>
+        <form id="studentForm">
+          <div class="form-grid">
+            <label>Student ID *<input id="studentId" required placeholder="ST001" /></label>
+            <label>Student Name *<input id="studentName" required placeholder="Arun Kumar" /></label>
+            <label>Department<select id="department"></select></label>
+            <label>Section *<input id="section" required placeholder="A" maxlength="10" /></label>
+            <label>Batch<select id="batch"></select></label>
+            <label>Semester<select id="semester"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></label>
+            <label>Attendance % *<input id="attendance" type="number" min="0" max="100" step="0.1" required placeholder="82" /></label>
+            <label>Previous Semester %<input id="previous" type="number" min="0" max="100" step="0.1" placeholder="72" /></label>
+          </div>
+          <div class="subject-box">
+            <div class="mini-head"><div><b>Individual Subject Performance</b><small>Enter assessment marks separately for every subject.</small></div><button type="button" class="link-btn" id="addSubject">+ Add subject</button></div>
+            <div class="mark-legend"><span id="legendInternal">Internal / 60</span><span id="legendAssignment">Assignment / 10</span><span id="legendUnit">Unit Test / 15</span><span id="legendExam">Final Exam / 100</span></div>
+            <div id="subjects"></div><button type="button" class="add-subject-bottom" id="addSubjectBottom">+ Add subject</button>
+          </div>
+          <div class="form-actions"><button type="button" class="secondary" id="clearForm">Clear</button><button class="primary" type="submit">Analyze Student</button></div>
+        </form>
+      </div>
+
+      <div class="card results-card">
+        <div class="section-head"><div><h3>Analysis Result</h3><p>Calculated from the submitted academic profile.</p></div><span id="performancePill" class="pill neutral">No data</span></div>
+        <div id="emptyState" class="empty"><div class="empty-icon">◎</div><h4>No student selected</h4><p>Add a student or load the demo dataset to see the analysis.</p></div>
+        <div id="analysis" class="hidden">
+          <div class="score-row"><div class="score-ring" id="scoreRing"><span id="overallScore">0%</span><small>Overall</small></div><div class="summary"><h4 id="resultName">Student</h4><p id="resultMeta"></p><div class="badges"><span id="performanceBadge"></span><span id="attendanceBadge"></span><span id="arrearBadge"></span></div></div></div>
+          <div class="result-highlight"><div><span>CGPA</span><b id="resultCgpa">0.00</b><small>10-point scale</small></div><div><span>Academic Result</span><b id="resultGrade">-</b><small id="resultGradeText">Based on overall performance</small></div></div>
+          <div class="metrics"><div><span>Subjects</span><b id="mSubjects">-</b></div><div><span>Attendance</span><b id="mAttendance">-</b></div><div><span>Previous</span><b id="mPrevious">-</b></div><div><span>Average</span><b id="mAverage">-</b></div></div>
+          <div class="chart-wrap"><h4>Subject Performance</h4><div id="barChart" class="bars"></div></div>
+          <div class="recommendations"><h4>Personalized Recommendations</h4><ul id="recommendations"></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card dashboard">
+      <div class="section-head"><div><h3>Class Analytics</h3><p>Overview of students currently stored in this browser.</p></div><div class="filter-row"><input id="studentSearch" class="analytics-search" type="search" placeholder="Search Roll No / Name / Performance" autocomplete="off" /><select id="deptFilter"><option value="ALL">All departments</option></select><select id="sectionFilter"><option value="ALL">All sections</option></select><select id="batchFilter"><option value="ALL">All batches</option></select><select id="semesterFilter"><option value="ALL">All semesters</option></select><button class="danger" id="clearAll">Clear all</button></div></div>
+      <div class="kpis"><div class="kpi"><span>Students</span><b id="kStudents">0</b></div><div class="kpi"><span>Class average</span><b id="kAverage">0%</b></div><div class="kpi"><span>Good performance</span><b id="kGood">0</b></div><div class="kpi"><span>Attendance avg.</span><b id="kAttendance">0%</b></div></div>
+      <div class="table-wrap"><table><thead><tr><th>ID</th><th>Name</th><th>Dept</th><th>Section</th><th>Batch</th><th>Semester</th><th>Overall</th><th>CGPA</th><th>Attendance</th><th>Attendance status</th><th>Performance</th><th>Trend</th><th>Action</th></tr></thead><tbody id="studentTable"></tbody></table></div>
+    </section>
+
+    
+  </main>
+
+
+  <div id="printModal" class="modal-backdrop hidden" aria-hidden="true">
+    <div class="print-modal" role="dialog" aria-modal="true" aria-labelledby="printTitle">
+      <div class="modal-head"><div><span class="eyebrow">PDF REPORT</span><h2 id="printTitle">Print Performance Report</h2><p>Choose what you want to print or save as PDF.</p></div><button class="close-modal" id="closePrintModal">×</button></div>
+      <div class="print-options">
+        <label>Report scope<select id="printScope"><option value="all">All students</option><option value="department">Selected department / section / batch / semester</option><option value="student">Selected student</option></select></label>
+        <div id="printDepartmentFields" class="print-fields hidden"><label>Department<select id="printDepartment"></select></label><label>Section<select id="printSection"><option value="ALL">All sections</option></select></label><label>Batch<select id="printBatch"><option value="ALL">All batches</option></select></label><label>Semester<select id="printSemester"><option value="ALL">All semesters</option></select></label></div>
+        <div id="printStudentField" class="print-student-fields hidden">
+          <label>Search student (Name / Student ID)<input id="printStudentSearch" type="search" placeholder="Search by name or Student ID" autocomplete="off" /></label>
+          <label>Semester<select id="printStudentSemester"><option value="ALL">All semesters</option></select></label>
+          <label class="print-student-select-label">Student<select id="printStudent"></select></label>
+        </div>
+      </div>
+      <div class="modal-actions"><button class="secondary" id="cancelPrint">Cancel</button><button class="primary" id="generatePrint">Open Print / Save PDF</button></div>
+    </div>
+  </div>
+  <div id="pdfPreviewModal" class="modal-backdrop hidden" aria-hidden="true">
+    <div class="pdf-preview-modal" role="dialog" aria-modal="true" aria-labelledby="pdfPreviewTitle">
+      <div class="modal-head"><div><span class="eyebrow">PDF PREVIEW</span><h2 id="pdfPreviewTitle">Preview Performance Report</h2><p>Review the report before saving it as a PDF.</p></div><button class="close-modal" id="closePdfPreview">×</button></div>
+      <div class="pdf-preview-scroll"><div id="pdfPreviewContent" class="pdf-preview-page"></div></div>
+      <div class="modal-actions"><button class="secondary" id="closePdfPreviewBottom">Close</button><button class="primary" id="savePreviewPdf">Save PDF</button></div>
+    </div>
+  </div>
+  <section id="printReport" class="print-report"></section>
+  <footer><p>Student Academic Performance Analyzer • Built as a client-side GitHub Pages project</p></footer>
+  <script src="js/app.js"></script>
+</body>
+</html>
