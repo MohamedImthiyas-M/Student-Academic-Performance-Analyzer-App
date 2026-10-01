@@ -13,7 +13,7 @@ Client-side academic analytics app built with HTML, CSS and JavaScript.
 - Print / Save as PDF reports for all students, a selected department/section, or a selected student
 - Automatic focus movement between assessment inputs after typing / Enter
 - JSON export
-- Responsive UI suitable for GitHub Pages
+- Responsive UI
 
 ## How to Run the App?
 
@@ -31,6 +31,8 @@ This project is an offline Windows desktop application built with Electron. No b
 6. Launch the application using the Desktop or Start Menu shortcut.
 
 **Recommended:** Use the Windows installer for normal usage.
+
+<img width="1856" height="986" alt="Screenshot 2026-10-01 202852" src="https://github.com/user-attachments/assets/bd898dac-8b6b-479e-95c8-0b54e9aad6ec" />
 
 ### Opion 2 - Browser Testing
 
