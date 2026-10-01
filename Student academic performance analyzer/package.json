@@ -1,0 +1,57 @@
+{
+  "name": "student-academic-performance-analyzer",
+  "version": "1.1.0",
+  "description": "Offline desktop Student Academic Performance Analyzer",
+  "main": "electron/main.js",
+  "author": "Student Academic Performance Analyzer",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --x64"
+  },
+  "devDependencies": {
+    "electron": "^38.2.2",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.sapa.studentperformance",
+    "productName": "Student Academic Performance Analyzer",
+    "asar": true,
+    "files": [
+      "index.html",
+      "css/**/*",
+      "js/**/*",
+      "data/**/*",
+      "electron/**/*",
+      "README*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "Student-Academic-Performance-Analyzer-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Student Academic Performance Analyzer"
+    }
+  }
+}
