@@ -8,7 +8,8 @@
   "private": true,
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --win --x64"
+    "dist": "electron-builder --win nsis",
+    "build": "electron-builder --win nsis"
   },
   "devDependencies": {
     "electron": "^38.2.2",
@@ -36,22 +37,18 @@
           "arch": [
             "x64"
           ]
-        },
-        {
-          "target": "portable",
-          "arch": [
-            "x64"
-          ]
         }
       ],
-      "artifactName": "Student-Academic-Performance-Analyzer-${version}-${arch}.${ext}"
+      "artifactName": "Student Academic Performance Analyzer Setup ${version}.${ext}"
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Student Academic Performance Analyzer"
+      "shortcutName": "Student Academic Performance Analyzer",
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": true
     }
   }
 }
