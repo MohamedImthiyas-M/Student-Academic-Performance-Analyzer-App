@@ -38,6 +38,8 @@ This project is an offline Windows desktop application built with Electron. No b
 
 For development/testing, index.html can also be opened in a browser or served using a local static web server.
 
+Link for the website: https://student-academic-performance-analyz-kappa.vercel.app/
+
 ## PDF reports
 Use **Print / PDF** in the top bar, select the report scope, then choose **Open Print / Save PDF**. In the browser print dialog choose **Save as PDF**.
 
